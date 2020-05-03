@@ -14,3 +14,5 @@ jobs:
         env: 
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          JOHN_EMAIL: ${{ secrets.JOHN_EMAIL }}
+          MAGGIE_EMAIL: ${{ secrets.MAGGIE_EMAIL }}
