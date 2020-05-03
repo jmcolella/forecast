@@ -1,7 +1,7 @@
 name: "Forecast"
 on:
   schedule:
-    - cron:  '*/5 * * * *'
+    - cron:  '0 30 8 ? * *'
 jobs:
   send_current_weather:
     runs-on: "ubuntu-latest"
