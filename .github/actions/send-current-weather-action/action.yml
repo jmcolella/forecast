@@ -1,0 +1,5 @@
+name: 'Send Current Weatrher'
+description: 'Sends current weather to my email'
+runs:
+  using: 'docker'
+  image: '../../../Dockerfile'

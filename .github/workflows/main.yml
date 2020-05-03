@@ -1,0 +1,16 @@
+name: "Forecast"
+on:
+  schedule:
+    - cron:  '* * * * *'
+jobs:
+  send_current_weather:
+    runs-on: "ubuntu-latest"
+    name: "A job to fire the send-current-weather-action"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Send current weather action step
+        uses: ./.github/actions/send-current-weather-action/
+        env: 
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
