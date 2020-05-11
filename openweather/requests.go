@@ -69,9 +69,9 @@ func (r *Requests) GetCurrentWeather() (*CurrentWeather, error) {
 NewRequests sets up a new OpenWeather request struct
 to make requests with that API
 */
-func NewRequests() *Requests {
+func NewRequests(cityID string) *Requests {
 	return &Requests{
 		APIKEY: os.Getenv("OPENWEATHER_API_KEY"),
-		CityID: "5110302",
+		CityID: cityID,
 	}
 }

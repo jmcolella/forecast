@@ -9,3 +9,10 @@ I wanted to play around a bit more with Golang, in particular handling pointers 
 ## Integrations
 
 Utilizes the [OpenWeather current weather API](https://openweathermap.org/current) for gathering local weather data for my location.
+
+## Development
+In order to run this app in development with all of the environment variables, use the following command:
+
+```
+  DEV=true go run main.go
+```

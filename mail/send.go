@@ -16,22 +16,35 @@ type Mail struct {
 }
 
 /*
+Recipient is a struct that holds information
+for sending weather emails to the specified people
+*/
+type Recipient struct {
+	Email  string
+	CityID string
+}
+
+/*
 GetRecipients returns a slice of email addresses
 to send forecast data to
 */
-func (m *Mail) GetRecipients() []string {
-	return []string{os.Getenv("JOHN_EMAIL"), os.Getenv("MAGGIE_EMAIL")}
+func (m *Mail) GetRecipients() []*Recipient {
+	var recipients []*Recipient
+
+	recipients = append(recipients, &Recipient{Email: os.Getenv("JOHN_EMAIL"), CityID: "5110302"})
+	recipients = append(recipients, &Recipient{Email: os.Getenv("MAGGIE_EMAIL"), CityID: "5133268"})
+
+	return recipients
 }
 
 /*
 Send uses the base credentials from the Mail struct
-to send a given subject/body from the same user to itself
+to send a given subject/body to the specified recipients
 */
-func (m *Mail) Send(subject, body string) error {
+func (m *Mail) Send(recipients []string, subject, body string) error {
 	msg := []byte("Subject: " + subject + "\r\n" + body)
-	to := m.GetRecipients()
 
-	return smtp.SendMail(m.Host+":587", *m.auth(), m.Username, to, msg)
+	return smtp.SendMail(m.Host+":587", *m.auth(), m.Username, recipients, msg)
 }
 
 func (m *Mail) auth() *smtp.Auth {
