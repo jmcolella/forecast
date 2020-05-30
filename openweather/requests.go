@@ -2,6 +2,7 @@ package openweather
 
 import (
 	"encoding/json"
+	"forecast/mail"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -12,8 +13,8 @@ Requests is the struct that maintains state and methods
 for interacting with the OpenWeather API
 */
 type Requests struct {
-	APIKEY string
-	CityID string
+	BaseURL string
+	APIKEY  string
 }
 
 /*
@@ -40,11 +41,43 @@ type temp struct {
 }
 
 /*
+OneCallWeather is a struct that has the same shape
+as the JSON returned by the OpenWeather OneCall weather API
+*/
+type OneCallWeather struct {
+	Hourly []hourlyWeather `json:"hourly"`
+	Daily  []dailyWeather  `json:"daily"`
+}
+
+type hourlyWeather struct {
+	DT        int64     `json:"dt"`
+	Temp      float32   `json:"temp"`
+	FeelsLike float32   `json:"feels_like"`
+	Weather   []weather `json:"weather"`
+}
+
+type dailyWeather struct {
+	DT        int64     `json:"dt"`
+	Sunrise   int64     `json:"sunrise"`
+	Sunset    int64     `json:"sunset"`
+	Temp      dailyTemp `json:"temp"`
+	FeelsLike dailyTemp `json:"feels_like"`
+	Weather   []weather `json:"weather"`
+}
+
+type dailyTemp struct {
+	Day   float32 `json:"day"`
+	Night float32 `json:"night"`
+	Morn  float32 `json:"morn"`
+	Eve   float32 `json:"eve"`
+}
+
+/*
 GetCurrentWeather uses the OpenWeather current weather API
 to get the current weather for the given CityID
 */
-func (r *Requests) GetCurrentWeather() (*CurrentWeather, error) {
-	url := "https://api.openweathermap.org/data/2.5/weather?id=" + r.CityID + "&appid=" + r.APIKEY + "&units=imperial"
+func (r *Requests) GetCurrentWeather(location mail.RecipientLocation) (*CurrentWeather, error) {
+	url := r.BaseURL + "/weather?id=" + location.CityID + "&appid=" + r.APIKEY + "&units=imperial"
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -66,12 +99,38 @@ func (r *Requests) GetCurrentWeather() (*CurrentWeather, error) {
 }
 
 /*
+GetOneCallWeather uses the OpenWeather OneCall weather API
+to get the hourly and daily weather for the given Long and Lat
+*/
+func (r *Requests) GetOneCallWeather(location mail.RecipientLocation) (*OneCallWeather, error) {
+	url := r.BaseURL + "/onecall?appid=" + r.APIKEY + "&lat=" + location.Lat + "&lon=" + location.Long + "&units=imperial"
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	oneCallWeather := OneCallWeather{}
+	err = json.Unmarshal(body, &oneCallWeather)
+	if err != nil {
+		return nil, err
+	}
+
+	return &oneCallWeather, nil
+}
+
+/*
 NewRequests sets up a new OpenWeather request struct
 to make requests with that API
 */
-func NewRequests(cityID string) *Requests {
+func NewRequests() *Requests {
 	return &Requests{
-		APIKEY: os.Getenv("OPENWEATHER_API_KEY"),
-		CityID: cityID,
+		BaseURL: os.Getenv("OPENWEATHER_BASE_URL"),
+		APIKEY:  os.Getenv("OPENWEATHER_API_KEY"),
 	}
 }
