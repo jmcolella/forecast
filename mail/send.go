@@ -16,28 +16,6 @@ type Mail struct {
 }
 
 /*
-Recipient is a struct that holds information
-for sending weather emails to the specified people
-*/
-type Recipient struct {
-	Email  string
-	CityID string
-}
-
-/*
-GetRecipients returns a slice of email addresses
-to send forecast data to
-*/
-func (m *Mail) GetRecipients() []*Recipient {
-	var recipients []*Recipient
-
-	recipients = append(recipients, &Recipient{Email: os.Getenv("JOHN_EMAIL"), CityID: "5110302"})
-	recipients = append(recipients, &Recipient{Email: os.Getenv("MAGGIE_EMAIL"), CityID: "5133268"})
-
-	return recipients
-}
-
-/*
 Send uses the base credentials from the Mail struct
 to send a given subject/body to the specified recipients
 */

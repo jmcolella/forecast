@@ -21,9 +21,15 @@ func main() {
 	recipients := mail.NewMail().GetRecipients()
 
 	for _, r := range recipients {
-		openWeatherRequests := openweather.NewRequests(r.CityID)
+		openWeatherRequests := openweather.NewRequests()
 
-		currentWeather, err := openWeatherRequests.GetCurrentWeather()
+		currentWeather, err := openWeatherRequests.GetCurrentWeather(r.Location)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		oneCallWeather, err := openWeatherRequests.GetOneCallWeather(r.Location)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -31,7 +37,9 @@ func main() {
 
 		formatter := openweather.NewFormat()
 
-		err = mail.NewMail().Send([]string{r.Email}, "Weather Today", formatter.FormatCurrentWeather(currentWeather))
+		emailBody := formatter.FormatCurrentWeather(currentWeather) + "\n" + formatter.FormatOneCallWeather(oneCallWeather)
+
+		err = mail.NewMail().Send([]string{r.Email}, "Weather Today", emailBody)
 		if err != nil {
 			log.Fatal(err)
 		}
