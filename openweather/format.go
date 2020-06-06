@@ -74,7 +74,11 @@ func (f *Format) FormatOneCallWeather(oneCallWeather *OneCallWeather) string {
 func formatHour(unixTime int64) string {
 	hour := time.Unix(unixTime, 0).Hour()
 
-	if hour <= 12 {
+	if hour == 12 {
+		return fmt.Sprintf("12pm")
+	}
+
+	if hour < 12 {
 		return fmt.Sprintf("%vam", hour)
 	}
 
