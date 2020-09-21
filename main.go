@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"forecast/mail"
 	"forecast/openweather"
+	"forecast/vacations"
 	"log"
 	"os"
 
@@ -22,14 +23,20 @@ func main() {
 
 	for _, r := range recipients {
 		openWeatherRequests := openweather.NewRequests()
+		vacationSpot := vacations.GetLocation()
+		currentLocation := r.Location
 
-		currentWeather, err := openWeatherRequests.GetCurrentWeather(r.Location)
+		if vacationSpot != nil {
+			currentLocation = vacationSpot.Location
+		}
+
+		currentWeather, err := openWeatherRequests.GetCurrentWeather(currentLocation)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		oneCallWeather, err := openWeatherRequests.GetOneCallWeather(r.Location)
+		oneCallWeather, err := openWeatherRequests.GetOneCallWeather(currentLocation)
 		if err != nil {
 			fmt.Println(err)
 			return
