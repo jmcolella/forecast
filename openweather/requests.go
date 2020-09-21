@@ -74,10 +74,10 @@ type dailyTemp struct {
 
 /*
 GetCurrentWeather uses the OpenWeather current weather API
-to get the current weather for the given CityID
+to get the current weather for the given Long and Lat
 */
 func (r *Requests) GetCurrentWeather(location mail.RecipientLocation) (*CurrentWeather, error) {
-	url := r.BaseURL + "/weather?id=" + location.CityID + "&appid=" + r.APIKEY + "&units=imperial"
+	url := r.BaseURL + "/weather?appid=" + r.APIKEY + "&lat=" + location.Lat + "&lon=" + location.Long + "&units=imperial"
 
 	resp, err := http.Get(url)
 	if err != nil {

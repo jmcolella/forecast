@@ -12,9 +12,8 @@ type Recipient struct {
 }
 
 type RecipientLocation struct {
-	CityID string
-	Lat    string
-	Long   string
+	Lat  string
+	Long string
 }
 
 /*
@@ -27,17 +26,15 @@ func (m *Mail) GetRecipients() []*Recipient {
 	recipients = append(recipients, &Recipient{
 		Email: os.Getenv("JOHN_EMAIL"),
 		Location: RecipientLocation{
-			CityID: "5110302",
-			Lat:    "40.650101",
-			Long:   "-73.949577",
+			Lat:  "40.650101",
+			Long: "-73.949577",
 		},
 	})
 	recipients = append(recipients, &Recipient{
 		Email: os.Getenv("MAGGIE_EMAIL"),
 		Location: RecipientLocation{
-			CityID: "5133268",
-			Lat:    "40.7001",
-			Long:   "-73.799583",
+			Lat:  "40.7001",
+			Long: "-73.799583",
 		},
 	})
 
