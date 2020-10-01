@@ -26,8 +26,8 @@ func (m *Mail) GetRecipients() []*Recipient {
 	recipients = append(recipients, &Recipient{
 		Email: os.Getenv("JOHN_EMAIL"),
 		Location: RecipientLocation{
-			Lat:  "40.650101",
-			Long: "-73.949577",
+			Lat:  "40.9009313",
+			Long: "-73.3431727",
 		},
 	})
 	recipients = append(recipients, &Recipient{
