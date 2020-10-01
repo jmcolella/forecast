@@ -15,11 +15,5 @@ type Vacation struct {
 GetLocation returns the Long/Lat of the current vacation spot, if available
 */
 func GetLocation() *Vacation {
-	return &Vacation{
-		Name: "Stowe",
-		Location: mail.RecipientLocation{
-			Lat:  "44.475278",
-			Long: "-72.702222",
-		},
-	}
+	return nil
 }
