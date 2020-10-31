@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"forecast/ggl"
 	"forecast/mail"
 	"forecast/openweather"
-	"forecast/vacations"
+	"forecast/users"
 	"log"
 	"os"
 
@@ -19,24 +21,30 @@ func main() {
 		}
 	}
 
-	recipients := mail.NewMail().GetRecipients()
+	ctx := context.Background()
+	firestoreClient, err := ggl.NewFireStoreClient(ctx)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	defer firestoreClient.Store.Close()
+
+	recipients, err := users.Fetch(ctx, firestoreClient)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 
 	for _, r := range recipients {
 		openWeatherRequests := openweather.NewRequests()
-		vacationSpot := vacations.GetLocation()
-		currentLocation := r.Location
 
-		if vacationSpot != nil {
-			currentLocation = vacationSpot.Location
-		}
-
-		currentWeather, err := openWeatherRequests.GetCurrentWeather(currentLocation)
+		currentWeather, err := openWeatherRequests.GetCurrentWeather(r.Location)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		oneCallWeather, err := openWeatherRequests.GetOneCallWeather(currentLocation)
+		oneCallWeather, err := openWeatherRequests.GetOneCallWeather(r.Location)
 		if err != nil {
 			fmt.Println(err)
 			return
