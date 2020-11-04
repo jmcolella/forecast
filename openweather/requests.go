@@ -2,7 +2,7 @@ package openweather
 
 import (
 	"encoding/json"
-	"forecast/mail"
+	"forecast/users"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -76,7 +76,7 @@ type dailyTemp struct {
 GetCurrentWeather uses the OpenWeather current weather API
 to get the current weather for the given Long and Lat
 */
-func (r *Requests) GetCurrentWeather(location mail.RecipientLocation) (*CurrentWeather, error) {
+func (r *Requests) GetCurrentWeather(location users.Location) (*CurrentWeather, error) {
 	url := r.BaseURL + "/weather?appid=" + r.APIKEY + "&lat=" + location.Lat + "&lon=" + location.Long + "&units=imperial"
 
 	resp, err := http.Get(url)
@@ -102,7 +102,7 @@ func (r *Requests) GetCurrentWeather(location mail.RecipientLocation) (*CurrentW
 GetOneCallWeather uses the OpenWeather OneCall weather API
 to get the hourly and daily weather for the given Long and Lat
 */
-func (r *Requests) GetOneCallWeather(location mail.RecipientLocation) (*OneCallWeather, error) {
+func (r *Requests) GetOneCallWeather(location users.Location) (*OneCallWeather, error) {
 	url := r.BaseURL + "/onecall?appid=" + r.APIKEY + "&lat=" + location.Lat + "&lon=" + location.Long + "&units=imperial"
 
 	resp, err := http.Get(url)
