@@ -1,7 +1,7 @@
 name: "Forecast"
 on:
   schedule:
-    - cron:  '30 12 * * *'
+    - cron: "30 12 * * *"
 jobs:
   send_current_weather:
     runs-on: "ubuntu-latest"
@@ -11,9 +11,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Send current weather action step
         uses: ./.github/actions/send-current-weather-action/
-        env: 
+        env:
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
           OPENWEATHER_BASE_URL: ${{ secrets.OPENWEATHER_BASE_URL }}
           JOHN_EMAIL: ${{ secrets.JOHN_EMAIL }}
           MAGGIE_EMAIL: ${{ secrets.MAGGIE_EMAIL }}
+          GOOGLE_FIREBASE_CREDENTIALS: ${{ secrets.GOOGLE_FIREBASE_CREDENTIALS }}
